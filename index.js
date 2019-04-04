@@ -25,23 +25,28 @@ class Client {
 
 		const url = `${this.endpoint}/customsearch/v1?${this.buildQuery(query, options)}`;
 
+
 		return got(url, {json: true}).then(res => {
 			const items = res.body.items || [];
+			const totalResults = res.body.queries.request[0].totalResults;
 
-			return items.map(item => ({
-				type: item.mime,
-				width: item.image.width,
-				height: item.image.height,
-				size: item.image.byteSize,
-				url: item.link,
-				thumbnail: {
-					url: item.image.thumbnailLink,
-					width: item.image.thumbnailWidth,
-					height: item.image.thumbnailHeight
-				},
-				description: item.snippet,
-				parentPage: item.image.contextLink
-			}));
+			return {
+				totalResults: totalResults,
+				items: items.map(item => ({
+					type: item.mime,
+					width: item.image.width,
+					height: item.image.height,
+					size: item.image.byteSize,
+					url: item.link,
+					thumbnail: {
+						url: item.image.thumbnailLink,
+						width: item.image.thumbnailWidth,
+						height: item.image.thumbnailHeight
+					},
+					description: item.snippet,
+					parentPage: item.image.contextLink
+				}))
+			}
 		});
 	}
 
