@@ -84,6 +84,10 @@ class Client {
 			result.safe = options.safe;
 		}
 
+		if (options.num) {
+			result.num = options.num;
+		}
+
 		return qs.stringify(result);
 	}
 }
